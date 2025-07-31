@@ -1,7 +1,6 @@
 import pygame
 import os
 import numpy as np
-import random
 
 
 SQSIZE = 10
@@ -261,17 +260,17 @@ class Cards(object):
         """
         Generate array representing valid cards
         """
-        c = ['X']*4
-        cn = {j: i for i, j in enumerate('RYBG')}
-        return np.array([[c[int(i)] for i in '0123112222113210']
-                         for c[0] in 'RYBG'
-                         for c[1] in 'RYBG'
-                         for c[2] in 'RYBG'
-                         for c[3] in 'RYBG'
-                         if all([c[i+1] != c[i] for i in range(3)])
-                            and sum([(4**i)*cn[j] for i, j in enumerate(c[::-1])]) 
-                                <= sum([(4**i)*cn[j] for i, j in enumerate(c)])
-                            and len(set(c)) < 4]).reshape(-1, 4, 4)
+        c = [-1]*4
+        return np.array(list('RYBG'))\
+                   [np.array([[c[int(i)] for i in '0123112222113210']
+                              for c[0] in range(4)
+                              for c[1] in range(4)
+                              for c[2] in range(4)
+                              for c[3] in range(4)
+                              if all([c[i+1] != c[i] for i in range(3)])
+                                 and sum([(4**i)*j for i, j in enumerate(c)]) 
+                                     > sum([(4**i)*j for i, j in enumerate(c[::-1])])
+                                 and len(set(c)) < 4]).reshape(-1, 4, 4)]
 
     def reset(self):
         """
